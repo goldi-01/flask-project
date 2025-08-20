@@ -260,6 +260,25 @@ def logout():
     session.clear()
     flash("Logged out successfully.", "info")
     return redirect(url_for('login'))
+@app.route("/debug/users")
+def debug_users():
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute("SELECT * FROM users")
+    rows = [dict(row) for row in c.fetchall()]
+    conn.close()
+    return jsonify(rows)
+
+@app.route("/debug/licenses")
+def debug_licenses():
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute("SELECT * FROM licenses")
+    rows = [dict(row) for row in c.fetchall()]
+    conn.close()
+    return jsonify(rows)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)
